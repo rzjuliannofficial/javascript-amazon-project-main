@@ -1,7 +1,7 @@
 import {cart, removeFromCart, updateFromCart, updateDeliveryOption} from '../../data/cart.js';
-import {products} from '../../data/products.js';
+import {products, getProduct} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
-import {deliveryOptions} from '../../data/deliveryOption.js';
+import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOption.js';
 
 //external library and javascript moduls(ESM)
 //jadi kegunaan ini agar bisa dipanggil di file lain
@@ -22,27 +22,20 @@ export function renderOrderSummary() {
         
         const productId = cartItem.productId;
 
-        let matchingProduct;
-        
-        products.forEach((product) => {
-            if (product.id === productId) {
-                matchingProduct = product;
-            }
-        });
+        const matchingProduct = getProduct(productId);
         // console.log(matchingProduct.priceCents);
         // console.log(matchingProduct);
 
         updatecheckOutQuantity();
 
         const deliveryOptionId = cartItem.deliveryOptionId;
-        let deliveryOption;
-
-        deliveryOptions.forEach((option) => {
-            if (option.id === deliveryOptionId) {
-                deliveryOption = option;
-                console.log(deliveryOption);
-            }
-        });
+        
+        let deliveryOption = getDeliveryOption(deliveryOptionId);
+        // deliveryOptions.forEach((option) => {
+        //     if (option.id === deliveryOptionId) {
+        //         deliveryOption = option;
+        //     }
+        // });
 
         
         const today = dayjs();
@@ -181,8 +174,6 @@ export function renderOrderSummary() {
 
         document.querySelector('.js-checkOut-Quantity')
             .innerHTML = checkOutQuantity + ' items';
-
-            console.log(checkOutQuantity);
     }
 
     document.querySelectorAll('.js-delivery-option')
