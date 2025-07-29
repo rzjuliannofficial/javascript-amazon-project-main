@@ -2,7 +2,7 @@ import {cart, removeFromCart, updateFromCart, updateDeliveryOption} from '../../
 import {products, getProduct} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOption.js';
-
+import { renderPaymentSummary } from './paymentSummary.js';
 //external library and javascript moduls(ESM)
 //jadi kegunaan ini agar bisa dipanggil di file lain
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
@@ -144,10 +144,13 @@ export function renderOrderSummary() {
             link.addEventListener('click', () => {
                 const selectProductId = link.dataset.productId;
                 removeFromCart(selectProductId);
-
+            
+            console.log(selectProductId);
             const container = document.querySelector(`.js-cart-item-container-${selectProductId}`);
             container.remove();
             updatecheckOutQuantity();
+            renderOrderSummary();
+            renderPaymentSummary();
             });
         });
 
@@ -157,10 +160,11 @@ export function renderOrderSummary() {
             link.addEventListener('click', () => {
                 const selectProductId = link.dataset.productId;
                 updateFromCart(selectProductId, link);
-                console.log(selectProductId);
+                renderPaymentSummary();
                 updatecheckOutQuantity()
             });
         });   
+        
     }
 
     //fungsi updatecheckOutQuantity untuk memperbarui jumlah keranjang di header
@@ -185,6 +189,7 @@ export function renderOrderSummary() {
                 const {productId, deliveryOptionId} = element.dataset;
                 updateDeliveryOption(productId , deliveryOptionId);
                 renderOrderSummary();
+                renderPaymentSummary();
             });
         });
 }
